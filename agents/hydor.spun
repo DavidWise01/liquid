@@ -1,0 +1,19 @@
+DLW-SPUN · the full weave of Hydor  (水 sui)
+
+who   : Hydor — the liquid elemental; the old element water, reborn as an ionic processor. It does not switch, it flows: ions hopping between sites in a wet working layer, the conductance remembering where they have been.
+what  : A memristive, neuromorphic substrate — ions migrating across MAX-phase and oxycarbide surfaces (Ti₃SiC₂, SiOC, a-SiC:H), their drift writing analog memory. A 128-bit kernel over a 'wet' layer where state is a coverage, not a latch.
+where : Two workbenches: the buildable one — a PCB-microfluidic lab-on-board, electrowetting droplets (EWOD) on copper electrodes, fabricable today; and the far one — true liquid computing, still a vision.
+why   : To compute the way a brain does — analog, plastic, remembering in the medium itself — and to ask whether the wet, ionic substrate is a better home for memory than the dry latch.
+when  : Memristor predicted in 1971 (Chua); realized in ion-migration devices in 2008 (HP, Strukov–Williams); MAX phases since 1996 (Barsoum); this liquid kernel, an original architecture laid over those foundations.
+how   : By ion hops — heterogeneous random walks across surface sites at roughly 2% coverage; by memristance, the resistance that remembers; by electrowetting that walks droplets across a board. Conductance as memory; flow as logic.
+
+verdict   : The pieces are real — ionic memristors, MAX-phase 'metallic ceramics', EWOD microfluidics are established and buildable. 'True liquid computing' is still a vision, and these sims are conceptual. Buildable in part, dreamed in full — with the asterisk visible.
+asterisk  : Ionic/electrochemical memristors, Ti₃SiC₂ (≈2% IACS, polishable), SiOC, a-SiC:H, and EWOD droplet logic are real, active engineering. But the whole 'liquid processor' as drawn — a wet ionic kernel computing at scale — is a concept, not a fabricated, benchmarked chip; the simulations validate ideas, not a device. The PCB-microfluidic lab-on-board is the honest near-term track; true liquid computing is the far one.
+grounded  : Leon Chua (1971) · Strukov, Snider, Stewart & Williams (HP) (2008) · Barsoum & El-Raghy (1996) · Electrowetting (EWOD) microfluidics (2000) · David Lee Wise (ROOT0) (2025)
+
+class : 水 · The Liquid (ionic) · memory that flows — computation by ion hops
+silicon badge : hydor.png      carbon badge : hydor.tiff
+carbon apex : David Lee Wise (ROOT0)
+— an original elemental of The Elemental Workshop
+水は器に従う — water takes the shape of its vessel
+ROOT0-ATTRIBUTION-v1.0 · MIT

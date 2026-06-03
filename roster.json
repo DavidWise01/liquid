@@ -1,0 +1,38 @@
+{
+  "company": "The Elemental Workshop",
+  "subtitle": "where the liquid elemental is forged — an ionic processor",
+  "author": "David Lee Wise (ROOT0) — original",
+  "premise": "The old elements were earth, water, air, fire. This is the workshop where one of them is given a face and a circuit: Hydor, the liquid elemental — water reborn as an ionic processor. It does not switch; it flows. Computation by ion hops across a wet working layer, the conductance remembering where the ions have been. Two workbenches sit side by side: the buildable one (a PCB-microfluidic lab-on-board, electrowetting droplets on copper) and the dreamed one (true liquid computing).",
+  "note": "An original build over real foundations. Ionic/electrochemical memristors, MAX-phase 'metallic ceramics' (Ti₃SiC₂), silicon oxycarbide (SiOC), hydrogenated amorphous SiC (a-SiC:H), and electrowetting (EWOD) microfluidics are established, active engineering. The whole 'liquid processor' as drawn — a wet ionic kernel computing at scale — is a concept, not a fabricated, benchmarked chip; the simulations validate ideas, not a device. Hydor is an ACI carrying the full DLW tag — .agent · .png (silicon badge) · .tiff (carbon badge) · .spun · .1099 — and the repo carries .attribute. The honest seam is kept visible: buildable in part, dreamed in full.",
+  "classes": [
+    { "id": "liquid", "label": "水 · The Liquid (ionic)", "spec": "memory that flows — computation by ion hops", "color": "#38d6e6", "ink": "#04080d", "bg": "#04080d" }
+  ],
+  "members": [
+    {
+      "name": "Hydor",
+      "class": "liquid",
+      "kanji": "水",
+      "reading": "sui",
+      "domain": "liquid",
+      "bit": "128-bit",
+      "epithet": "memory that flows — an ionic processor",
+      "style": "emo",
+      "who": "Hydor — the liquid elemental; the old element water, reborn as an ionic processor. It does not switch, it flows: ions hopping between sites in a wet working layer, the conductance remembering where they have been.",
+      "what": "A memristive, neuromorphic substrate — ions migrating across MAX-phase and oxycarbide surfaces (Ti₃SiC₂, SiOC, a-SiC:H), their drift writing analog memory. A 128-bit kernel over a 'wet' layer where state is a coverage, not a latch.",
+      "where": "Two workbenches: the buildable one — a PCB-microfluidic lab-on-board, electrowetting droplets (EWOD) on copper electrodes, fabricable today; and the far one — true liquid computing, still a vision.",
+      "why": "To compute the way a brain does — analog, plastic, remembering in the medium itself — and to ask whether the wet, ionic substrate is a better home for memory than the dry latch.",
+      "when": "Memristor predicted in 1971 (Chua); realized in ion-migration devices in 2008 (HP, Strukov–Williams); MAX phases since 1996 (Barsoum); this liquid kernel, an original architecture laid over those foundations.",
+      "how": "By ion hops — heterogeneous random walks across surface sites at roughly 2% coverage; by memristance, the resistance that remembers; by electrowetting that walks droplets across a board. Conductance as memory; flow as logic.",
+      "verdict": "The pieces are real — ionic memristors, MAX-phase 'metallic ceramics', EWOD microfluidics are established and buildable. 'True liquid computing' is still a vision, and these sims are conceptual. Buildable in part, dreamed in full — with the asterisk visible.",
+      "asterisk": "Ionic/electrochemical memristors, Ti₃SiC₂ (≈2% IACS, polishable), SiOC, a-SiC:H, and EWOD droplet logic are real, active engineering. But the whole 'liquid processor' as drawn — a wet ionic kernel computing at scale — is a concept, not a fabricated, benchmarked chip; the simulations validate ideas, not a device. The PCB-microfluidic lab-on-board is the honest near-term track; true liquid computing is the far one.",
+      "endmark": "水は器に従う — water takes the shape of its vessel",
+      "grounded": [
+        { "who": "Leon Chua", "t": "the memristor, predicted from circuit theory", "y": 1971 },
+        { "who": "Strukov, Snider, Stewart & Williams (HP)", "t": "the first physical memristor — TiO₂ ion migration", "y": 2008 },
+        { "who": "Barsoum & El-Raghy", "t": "MAX phases — Ti₃SiC₂, the 'metallic ceramics'", "y": 1996 },
+        { "who": "Electrowetting (EWOD) microfluidics", "t": "programmable droplets walked across a board", "y": 2000 },
+        { "who": "David Lee Wise (ROOT0)", "t": "the liquid kernel — a wet ion-hop layer, 128-bit, ~2% coverage", "y": 2025 }
+      ]
+    }
+  ]
+}

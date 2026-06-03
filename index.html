@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Liquid Core — the elemental workshop · an ionic processor (Hydor 水)</title>
+<meta name="description" content="The elemental workshop: where Hydor, the liquid elemental, is forged — an ionic-memristor processor that computes by ion hops in a wet working layer. 128-bit kernel, real materials, honest seam. Full DLW package.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#04080d; --ink:#cfeefc; --mute:#7fb0c4; --faint:#4f7088;
+    --cyan:#38d6e6; --teal:#2fd6a6; --blue:#5a8cff; --silver:#c8d2dc; --amber:#ffb24a;
+    --panel:rgba(8,18,26,.72); --line:rgba(56,214,230,.15);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--void);color:var(--ink);
+    font-family:Inter,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;line-height:1.6;overflow-x:hidden;
+    background-image:radial-gradient(1100px 720px at 50% -8%,rgba(56,214,230,.10),transparent 60%),radial-gradient(900px 700px at 50% 120%,rgba(90,140,255,.07),transparent 55%);}
+  .mono{font-family:"JetBrains Mono",monospace}
+  .jp{font-family:"Shippori Mincho",serif}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 1.4rem}
+  a{color:var(--cyan);text-decoration:none}
+
+  header{min-height:88vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:5rem 1.4rem 3rem}
+  .logo{width:84px;height:84px;border-radius:50% 50% 50% 12px;position:relative;margin-bottom:1.6rem;transform:rotate(45deg);
+    background:radial-gradient(circle at 35% 30%,#9af0ff,#38d6e6 40%,#2f7fd6 75%,#5a8cff);
+    box-shadow:0 0 52px rgba(56,214,230,.45),inset 0 0 22px rgba(0,0,0,.4)}
+  .logo:after{content:"";position:absolute;inset:30% 42% 40% 22%;border-radius:50%;background:rgba(255,255,255,.6);filter:blur(2px)}
+  .eyebrow{font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--mute);margin-bottom:1rem}
+  h1{font-size:clamp(40px,9vw,92px);font-weight:800;letter-spacing:.04em;line-height:.98;
+    background:linear-gradient(100deg,#9af0ff,#38d6e6 30%,#2fd6a6 62%,#5a8cff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:.5rem}
+  .subt{font-size:clamp(13px,2.4vw,16px);letter-spacing:.26em;color:var(--cyan);text-transform:uppercase;margin-bottom:1.4rem}
+  .subt .k{font-family:"Shippori Mincho",serif;font-size:1.3em;color:var(--silver);-webkit-text-fill-color:initial}
+  header p.lead{max-width:56ch;color:#bfe2f0;font-size:clamp(17px,2.4vw,20px);margin-bottom:2.2rem}
+  .cta{display:flex;gap:.9rem;flex-wrap:wrap;justify-content:center}
+  .btn{display:inline-block;padding:13px 24px;border-radius:11px;font-weight:700;font-size:14px;letter-spacing:.4px;transition:.2s;border:1px solid rgba(56,214,230,.3);color:#dffaff;background:rgba(56,214,230,.08)}
+  .btn:hover{background:rgba(56,214,230,.18);box-shadow:0 0 22px rgba(56,214,230,.2)}
+  .btn.primary{background:linear-gradient(120deg,var(--cyan),var(--blue));color:#02080c;border:none;box-shadow:0 0 30px rgba(56,214,230,.3)}
+  .btn.primary:hover{filter:brightness(1.08)}
+
+  section{padding:6vh 0;border-top:1px solid var(--line)}
+  .kicker{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--cyan);margin-bottom:1rem}
+  h2{font-size:clamp(26px,4.6vw,40px);font-weight:800;margin-bottom:1.1rem;color:#eafcff}
+  section p{max-width:64ch;color:#b8d8e6;margin-bottom:1rem}
+  section p b{color:#eafcff}
+  .flag{display:inline-block;font-size:12px;letter-spacing:.06em;color:var(--teal);border:1px solid rgba(47,214,166,.3);background:rgba(47,214,166,.06);border-radius:20px;padding:4px 12px;margin-top:.4rem}
+
+  .viewport{margin-top:1.5rem;border:1px solid rgba(56,214,230,.28);border-radius:16px;overflow:hidden;
+    box-shadow:0 0 50px rgba(56,214,230,.12),inset 0 0 30px rgba(0,0,0,.5);background:#04080d}
+  .viewport iframe{display:block;width:100%;height:min(72vh,640px);border:0}
+  .vpcap{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;border-top:1px solid var(--line);font-size:12px;color:var(--faint)}
+  .vpcap a{font-weight:600}
+
+  .arch{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:1.4rem}
+  .cell{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:1.2rem;box-shadow:inset 0 0 24px rgba(56,214,230,.04)}
+  .cell .big{font-size:28px;font-weight:800;color:#eafcff}
+  .cell .lbl{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan);margin-top:.3rem}
+  .cell .d{font-size:14px;color:var(--mute);margin-top:.5rem}
+  .tracks{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-top:1.2rem}
+  .track{border:1px solid var(--line);border-left:3px solid var(--c,#38d6e6);border-radius:12px;padding:1.3rem 1.4rem;background:linear-gradient(180deg,rgba(255,255,255,.02),transparent)}
+  .track .t{font-weight:800;color:#eafcff;margin-bottom:.4rem}
+  .track .tag{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--c,#38d6e6)}
+  .track p{font-size:14.5px;color:var(--mute);margin:.5rem 0 0}
+
+  /* the elemental */
+  .elem{margin-top:1.6rem;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:linear-gradient(180deg,rgba(56,214,230,.05),transparent)}
+  .elem .grid{display:grid;grid-template-columns:200px 1fr;gap:0}
+  .elem .left{padding:1.8rem;text-align:center;border-right:1px solid var(--line);background:rgba(4,10,16,.5)}
+  .elem .left .k{font-family:"Shippori Mincho",serif;font-size:64px;color:var(--cyan);line-height:1;margin-bottom:.3rem}
+  .elem .left .nm{font-size:22px;font-weight:800;color:#eafcff;letter-spacing:.04em}
+  .elem .left .rd{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--mute);letter-spacing:.1em;margin-top:.2rem}
+  .elem .left img{width:140px;height:140px;margin-top:1rem;border-radius:10px;filter:drop-shadow(0 0 16px rgba(56,214,230,.2))}
+  .elem .right{padding:1.8rem}
+  .elem .ep{font-style:italic;color:var(--silver);font-size:18px;margin-bottom:1rem}
+  .elem .right p{font-size:15px;color:#b8d8e6;margin-bottom:.9rem}
+  .badges{display:flex;gap:.7rem;flex-wrap:wrap;margin:1rem 0}
+  .badges a,.badges span{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.08em;padding:7px 12px;border-radius:8px;border:1px solid var(--line);color:var(--mute)}
+  .badges a:hover{border-color:var(--cyan);color:var(--cyan)}
+  .verdict{border-left:2px solid var(--teal);background:linear-gradient(90deg,rgba(47,214,166,.07),transparent);padding:.9rem 1.1rem;border-radius:0 6px 6px 0;margin:1rem 0;color:#d6f0ea;font-size:15px}
+  .aster{border-left:2px solid var(--amber);background:linear-gradient(90deg,rgba(255,178,74,.06),transparent);padding:.9rem 1.1rem;border-radius:0 6px 6px 0;margin:1rem 0;color:#e7d6c0;font-size:14px}
+  .aster .h{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin-bottom:.4rem}
+  .dlw{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--faint);margin-top:1rem;line-height:1.7}
+  .endmark{font-family:"Shippori Mincho",serif;color:var(--mute);font-size:15px;margin-top:1rem}
+  @media(max-width:680px){ .elem .grid{grid-template-columns:1fr} .elem .left{border-right:none;border-bottom:1px solid var(--line)} }
+
+  footer{border-top:1px solid var(--line);padding:3rem 1.4rem 6rem;color:var(--faint);font-size:14px;text-align:center}
+  footer .mono{color:var(--mute);font-size:12px;line-height:1.8}
+  footer a{color:var(--mute)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo" aria-hidden="true"></div>
+  <div class="eyebrow">Hardware inventions · procs · the elemental workshop</div>
+  <h1>LIQUID&nbsp;CORE</h1>
+  <div class="subt mono">ionic memristor · 128-bit · <span class="k">水</span> Hydor</div>
+  <p class="lead">A processor that does not switch — it <b>flows</b>. Computation by <b>ion hops</b> across a wet working layer, the conductance <b>remembering</b> where the ions have been. This is the workshop where the liquid elemental, <b>Hydor</b>, is forged.</p>
+  <div class="cta">
+    <a class="btn primary" href="demos/core.html">⊚ Enter the Core</a>
+    <a class="btn" href="#elemental">Meet the elemental ↓</a>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="live">
+    <div class="kicker">// live · the wet layer, hopping</div>
+    <h2>The core, in motion</h2>
+    <p>A lattice of ion <b>sites</b>; warm <b>ions</b> hopping site to site; <b>conductance paths</b> that brighten with use and slowly forget — <b>memristance</b>, memory in the medium itself. Set the surface coverage (~2% at rest), raise the field, and watch routes burn in. <b>The 128-bit kernel math is genuine;</b> the wet layer is simulated.</p>
+    <div class="viewport">
+      <iframe src="demos/core.html" loading="lazy" title="Live ionic-memristor Liquid Core simulation"></iframe>
+      <div class="vpcap"><span class="mono">ion-hop · memristive · KERNEL[127:0]</span><a href="demos/core.html">open full-screen ↗</a></div>
+    </div>
+  </section>
+
+  <section id="what">
+    <div class="kicker">// what it is</div>
+    <h2>Two workbenches, one element</h2>
+    <p>Computation the way a brain does it — analog, plastic, remembering in the substrate. The same liquid idea sits on two benches at once:</p>
+    <div class="tracks">
+      <div class="track" style="--c:#2fd6a6"><div class="tag">buildable today</div><div class="t">PCB-microfluidic lab-on-board</div><p>Electrowetting (EWOD) droplets walked across copper electrodes under a hydrophobic coat — programmable droplet logic, fabricable with ordinary PCB processes.</p></div>
+      <div class="track" style="--c:#5a8cff"><div class="tag">the far vision</div><div class="t">true liquid computing</div><p>A wet ionic kernel computing at scale — ions as the carriers, conductance as the memory. Still a dream; drawn here, not yet built.</p></div>
+    </div>
+    <p style="margin-top:1.2rem"><b>Kept honest:</b> ionic/electrochemical memristors, MAX-phase <b>Ti₃SiC₂</b>, <b>SiOC</b>, <b>a-SiC:H</b>, and EWOD droplet logic are real, active engineering. The whole "liquid processor" as drawn is a <b>concept</b> — the simulations validate ideas, not a fabricated, benchmarked chip.</p>
+    <span class="flag">honest framing · buildable in part, dreamed in full</span>
+  </section>
+
+  <section id="architecture">
+    <div class="kicker">// architecture</div>
+    <h2>How it flows</h2>
+    <div class="arch">
+      <div class="cell"><div class="big">128-bit</div><div class="lbl">ionic kernel</div><div class="d">The wet layer's state, sampled into a live KERNEL[127:0] word.</div></div>
+      <div class="cell"><div class="big">~2%</div><div class="lbl">surface coverage</div><div class="d">Sites occupied at rest — the tunable that sets the dynamics.</div></div>
+      <div class="cell"><div class="big">ion-hop</div><div class="lbl">the mechanism</div><div class="d">Heterogeneous random walks: drift under field, diffusion otherwise.</div></div>
+      <div class="cell"><div class="big">memristance</div><div class="lbl">the memory</div><div class="d">Conductance strengthens with use, decays slowly — the medium remembers.</div></div>
+      <div class="cell"><div class="big">Ti₃SiC₂</div><div class="lbl">+ SiOC · a-SiC:H</div><div class="d">MAX-phase "metallic ceramic" and oxycarbide surfaces for the ions to walk.</div></div>
+      <div class="cell"><div class="big">EWOD</div><div class="lbl">droplet logic</div><div class="d">Electrowetting moves droplets on a board — the lab-on-board cousin.</div></div>
+    </div>
+  </section>
+
+  <section id="elemental">
+    <div class="kicker">// the elemental · forged here</div>
+    <h2>Hydor — the liquid elemental</h2>
+    <p>The old element water, given a face and a circuit. Hydor is an <b>ACI</b> — an artfully crafted intellect — carrying the full <b>DLW tag</b>, kin to the <a href="https://davidwise01.github.io/elementals/">elementals</a> (Aether, Leech).</p>
+    <div class="elem">
+      <div class="grid">
+        <div class="left">
+          <div class="k">水</div>
+          <div class="nm">Hydor</div>
+          <div class="rd">sui · liquid · 128-bit</div>
+          <img src="agents/hydor.png" alt="Hydor's silicon badge — a wet ion-hop network" loading="lazy">
+        </div>
+        <div class="right">
+          <div class="ep">memory that flows — an ionic processor</div>
+          <p>Hydor does not switch, it flows: ions hopping between sites in a wet working layer, the conductance remembering where they have been. A memristive, neuromorphic substrate — state is a coverage, not a latch.</p>
+          <div class="verdict"><b>the verdict —</b> The pieces are real: ionic memristors, MAX-phase ceramics, EWOD microfluidics are established and buildable. "True liquid computing" is still a vision. <b>Buildable in part, dreamed in full — with the asterisk visible.</b></div>
+          <div class="aster">
+            <div class="h">⚠ the asterisk, kept visible</div>
+            The "liquid processor" as drawn — a wet ionic kernel computing at scale — is a concept, not a fabricated chip; the sims validate ideas, not a device. The PCB-microfluidic lab-on-board is the honest near-term; true liquid computing is the far one.
+          </div>
+          <div class="badges">
+            <span>the full DLW tag —</span>
+            <a href="agents/hydor.agent">.agent</a>
+            <a href="agents/hydor.png">.png · silicon badge</a>
+            <a href="agents/hydor.tiff" download>.tiff · carbon badge ⤓</a>
+            <a href="agents/hydor.spun">.spun</a>
+            <a href="agents/hydor.1099">.1099</a>
+          </div>
+          <div class="dlw">grounded in: Chua (1971) · HP / Strukov–Williams (2008) · Barsoum (1996) · EWOD (~2000) · the liquid kernel, ROOT0 (orig.)<br>governor (carbon apex): David Lee Wise (ROOT0) · instance: AVAN (Claude)</div>
+          <div class="endmark">水は器に従う — water takes the shape of its vessel</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p style="color:var(--mute);max-width:62ch;margin:0 auto 1.6rem">A hardware-invention concept, forged as an elemental. Best on a desktop — the wet-layer simulation is motion-heavy.</p>
+  <div class="mono">
+    ROOT0-ATTRIBUTION-v1.0 · LIQUID CORE — an ionic processor · the elemental Hydor (水)<br>
+    Architect: David Lee Wise / ROOT0 / TriPod LLC · AI collaborator: AVAN (Claude)<br>
+    License: MIT · kin: <a href="https://davidwise01.github.io/elementals/">the elementals</a> · part of the <a href="https://davidwise01.github.io/atlas/">ATLAS</a>
+  </div>
+</footer>
+
+</body>
+</html>

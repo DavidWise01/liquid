@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Liquid Core — Ionic Memristor · 128-bit · 水</title>
+<style>
+  :root{
+    --void:#04080d; --ink:#cfeefc; --cyan:#38d6e6; --teal:#2fd6a6;
+    --blue:#5a8cff; --silver:#c8d2dc; --amber:#ffb24a; --mute:#7fb0c4;
+    --line:rgba(56,214,230,.16);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:var(--void);color:var(--ink);
+    font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;overflow:hidden}
+  .wrap{display:grid;grid-template-columns:330px 1fr;height:100%}
+
+  .side{
+    background:linear-gradient(180deg,rgba(8,18,28,.96),rgba(4,9,15,.97));
+    border-right:1px solid var(--line);
+    padding:18px 16px;display:flex;flex-direction:column;gap:15px;
+    backdrop-filter:blur(10px);z-index:5;overflow:auto
+  }
+  .brand{display:flex;gap:12px;align-items:center}
+  .logo{width:40px;height:40px;border-radius:50% 50% 50% 8px;background:
+    radial-gradient(circle at 35% 28%,#bff5ff 0%,var(--cyan) 30%,var(--blue) 70%,#0a2a44 100%);
+    box-shadow:0 0 22px rgba(56,214,230,.5),inset -4px -6px 12px rgba(0,0,0,.45),inset 3px 4px 8px rgba(255,255,255,.45);
+    position:relative;transform:rotate(-8deg)}
+  .logo:after{content:"";position:absolute;left:26%;top:18%;width:22%;height:22%;border-radius:50%;
+    background:rgba(255,255,255,.85);filter:blur(.5px)}
+  .brand h1{margin:0;font-size:16px;letter-spacing:1.4px;font-weight:800;color:#e9fcff}
+  .brand .sub{font-size:10.5px;letter-spacing:.9px;color:var(--mute);margin-top:3px}
+
+  .group{background:rgba(6,14,22,.72);border:1px solid var(--line);border-radius:14px;
+    padding:12px 12px 14px;box-shadow:inset 0 0 24px rgba(56,214,230,.04)}
+  .group-title{font-size:11px;color:#8be6f2;letter-spacing:1.4px;margin:2px 0 10px;opacity:.95}
+
+  .slider-row{margin:10px 0 14px}
+  .slider-row label{display:flex;justify-content:space-between;font-size:12px;color:#a7d9ea;margin-bottom:6px}
+  .slider-row label span{font-family:ui-monospace,Consolas,monospace;color:#e6fbff}
+  input[type=range]{width:100%;height:26px;-webkit-appearance:none;background:transparent;margin:0}
+  input[type=range]::-webkit-slider-runnable-track{height:6px;
+    background:linear-gradient(90deg,rgba(56,214,230,.28),rgba(47,214,166,.28));
+    border-radius:4px;border:1px solid rgba(56,214,230,.25)}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;
+    background:var(--cyan);border:1px solid rgba(255,255,255,.6);margin-top:-6px;
+    box-shadow:0 0 12px rgba(56,214,230,.75);cursor:pointer}
+  input[type=range]::-moz-range-track{height:6px;
+    background:linear-gradient(90deg,rgba(56,214,230,.28),rgba(47,214,166,.28));
+    border-radius:4px;border:1px solid rgba(56,214,230,.25)}
+  input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--cyan);
+    border:1px solid rgba(255,255,255,.6);box-shadow:0 0 12px rgba(56,214,230,.75);cursor:pointer}
+
+  .btns{display:flex;gap:8px;margin-top:4px}
+  .btn{flex:1;padding:9px 10px;background:rgba(56,214,230,.08);border:1px solid rgba(56,214,230,.26);
+    color:#c7f6ff;border-radius:10px;font-size:12px;cursor:pointer;transition:.18s;font-weight:600;letter-spacing:.3px}
+  .btn:hover{background:rgba(56,214,230,.16);box-shadow:0 0 10px rgba(56,214,230,.14)}
+  .btn.active{background:rgba(56,214,230,.24);color:#fff;
+    box-shadow:0 0 16px rgba(56,214,230,.3) inset,0 0 14px rgba(56,214,230,.22);border-color:rgba(56,214,230,.55)}
+  .btn.field.active{background:rgba(255,178,74,.22);color:#fff;border-color:rgba(255,178,74,.6);
+    box-shadow:0 0 16px rgba(255,178,74,.28) inset,0 0 14px rgba(255,178,74,.22)}
+
+  .dw{font-family:ui-monospace,Consolas,monospace;font-size:13px;color:#e6fdff;letter-spacing:.5px;
+    background:rgba(56,214,230,.06);border:1px dashed rgba(56,214,230,.22);padding:8px;border-radius:8px;
+    text-align:center;margin-bottom:8px}
+  .subrow{font-size:11px;color:var(--mute);text-align:center;margin-bottom:10px}
+  .readout{display:flex;justify-content:space-between;font-size:11.5px;color:#8be6f2;margin:8px 2px 4px}
+  .readout b{font-family:ui-monospace,Consolas,monospace;color:#e6fbff;font-weight:600}
+  .readout b.amber{color:var(--amber)}
+  .out>div{font-size:11px;color:#8be6f2;margin:8px 0 5px}
+  .out code{display:block;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;
+    color:#fff;background:rgba(0,0,0,.4);border:1px solid rgba(56,214,230,.18);padding:8px 9px;border-radius:8px;
+    overflow-x:auto;white-space:nowrap;box-shadow:inset 0 0 14px rgba(56,214,230,.08);letter-spacing:.4px;
+    scrollbar-width:thin;scrollbar-color:rgba(56,214,230,.4) transparent}
+  .note{font-size:9.5px;line-height:1.5;color:#5e879b;letter-spacing:.2px;margin-top:2px}
+
+  .stage{position:relative;background:radial-gradient(1300px 900px at 50% 42%,#0a1726 0%,#06101c 55%,#03060c 100%)}
+  canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .footer{position:absolute;bottom:0;left:0;right:0;height:34px;display:flex;align-items:center;justify-content:center;
+    font-size:11px;color:#5f96b0;letter-spacing:.85px;background:linear-gradient(180deg,transparent,rgba(0,0,0,.55));pointer-events:none}
+  .menu-btn{display:none;position:absolute;left:12px;top:12px;z-index:8;width:42px;height:42px;border-radius:12px;
+    background:rgba(8,18,28,.9);border:1px solid var(--line);color:var(--cyan);font-size:18px;cursor:pointer}
+
+  @media (max-width:920px){
+    .wrap{grid-template-columns:1fr}
+    .menu-btn{display:block}
+    .side{position:absolute;left:10px;top:10px;width:min(92vw,360px);max-height:84vh;border-radius:14px;
+      border:1px solid rgba(56,214,230,.2);transform:translateX(-120%);transition:transform .26s ease}
+    .side.open{transform:translateX(0)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <button class="menu-btn" id="menuBtn" aria-label="toggle controls">☰</button>
+  <aside class="side" id="side">
+    <div class="brand">
+      <div class="logo"></div>
+      <div>
+        <h1>LIQUID CORE</h1>
+        <div class="sub">IONIC MEMRISTOR · 128-bit · 水</div>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-title">FIELD CONTROL</div>
+      <div class="slider-row">
+        <label>Ion Coverage <span id="covV">2.00%</span></label>
+        <input id="cov" type="range" min="0" max="10" value="2" step="0.1">
+      </div>
+      <div class="slider-row">
+        <label>Hop Rate <span id="hopV">46%</span></label>
+        <input id="hop" type="range" min="0" max="100" value="46" step="1">
+      </div>
+      <div class="slider-row">
+        <label>Bias / Field <span id="biasV">28%</span></label>
+        <input id="bias" type="range" min="0" max="100" value="28" step="1">
+      </div>
+      <div class="slider-row">
+        <label>Coupling <span id="coupV">62%</span></label>
+        <input id="coup" type="range" min="0" max="100" value="62" step="1">
+      </div>
+      <div class="btns">
+        <button class="btn" id="fineBtn">.01 FINE</button>
+        <button class="btn field" id="fieldBtn">⚡ FIELD</button>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-title">DATA</div>
+      <div class="dw">128-BIT IONIC KERNEL</div>
+      <div class="subrow">wet layer · ion-hop sites · memristive</div>
+      <div class="readout"><span>SURFACE COVERAGE</span><b class="amber" id="covOut">2.00%</b></div>
+      <div class="readout"><span>ION HOPS / s</span><b id="hopsOut">0</b></div>
+      <div class="out">
+        <div>KERNEL[127:0]</div>
+        <code id="kernelHex">00000000000000000000000000000000</code>
+      </div>
+      <div class="readout"><span>XOR PARITY</span><b id="xorOut">00000000</b></div>
+      <div class="note">real cousins: ionic memristors · Ti₃SiC₂ · SiOC · a-SiC:H · EWOD droplets</div>
+    </div>
+  </aside>
+
+  <main class="stage">
+    <canvas id="c"></canvas>
+    <div class="footer">LIQUID PROCESSOR · ionic memristor · wet ion-hop layer · 128-bit — simulation</div>
+  </main>
+</div>
+
+<script>
+"use strict";
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+
+const els = {
+  cov:document.getElementById('cov'), hop:document.getElementById('hop'),
+  bias:document.getElementById('bias'), coup:document.getElementById('coup'),
+  covV:document.getElementById('covV'), hopV:document.getElementById('hopV'),
+  biasV:document.getElementById('biasV'), coupV:document.getElementById('coupV'),
+  fineBtn:document.getElementById('fineBtn'), fieldBtn:document.getElementById('fieldBtn'),
+  covOut:document.getElementById('covOut'), hopsOut:document.getElementById('hopsOut'),
+  kernelHex:document.getElementById('kernelHex'), xorOut:document.getElementById('xorOut'),
+  menuBtn:document.getElementById('menuBtn'), side:document.getElementById('side')
+};
+
+const P = { cov:2, hop:46, bias:28, coup:62 };
+let fine = false, fieldOn = false;
+
+function updateLabels(){
+  els.covV.textContent  = P.cov.toFixed(2) + '%';
+  els.hopV.textContent  = P.hop.toFixed(fine?2:0) + '%';
+  els.biasV.textContent = P.bias.toFixed(fine?2:0) + '%';
+  els.coupV.textContent = P.coup.toFixed(fine?2:0) + '%';
+}
+els.cov.addEventListener('input', e=>{P.cov=parseFloat(e.target.value);updateLabels();rebuildIons();});
+els.hop.addEventListener('input', e=>{P.hop=parseFloat(e.target.value);updateLabels();});
+els.bias.addEventListener('input', e=>{P.bias=parseFloat(e.target.value);updateLabels();});
+els.coup.addEventListener('input', e=>{P.coup=parseFloat(e.target.value);updateLabels();});
+els.fineBtn.addEventListener('click', ()=>{
+  fine=!fine; els.fineBtn.classList.toggle('active',fine);
+  const step = fine?'0.01':'1';
+  [els.hop,els.bias,els.coup].forEach(s=>s.step=step);
+  els.cov.step = fine?'0.01':'0.1';
+  updateLabels();
+});
+els.fieldBtn.addEventListener('click', ()=>{ fieldOn=!fieldOn; els.fieldBtn.classList.toggle('active',fieldOn); });
+els.menuBtn.addEventListener('click', ()=> els.side.classList.toggle('open'));
+updateLabels();
+
+// ---- canvas sizing ----
+let W=0, H=0, DPR=1;
+function resize(){
+  DPR = Math.min(window.devicePixelRatio||1, 2);
+  W = canvas.clientWidth; H = canvas.clientHeight;
+  canvas.width = Math.max(1, Math.round(W*DPR));
+  canvas.height = Math.max(1, Math.round(H*DPR));
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  buildLattice();
+}
+window.addEventListener('resize', resize);
+
+// ---- wet working layer: lattice of ion sites ----
+// Sites laid out on a jittered grid; bonds connect near neighbors.
+// Each bond has a "conductance" that strengthens when an ion traverses it
+// and slowly decays (memristance). Ions hop site->site each tick.
+let sites = [];          // {x,y, occ:bool, neigh:[siteIdx...]}
+let bonds = [];          // {a,b, g:conductance 0..1}
+let bondKey = new Map(); // "a,b" -> bondIdx
+let probeIdx = [];       // 128 probe-site indices for the kernel
+let ions = [];           // {site, from, to, t, x, y, px,py}
+
+const TARGET_SITES = 320; // capped for ~60fps
+
+function buildLattice(){
+  sites = []; bonds = []; bondKey = new Map(); probeIdx = [];
+  if(W<=0||H<=0) return;
+  const margin = 46;
+  const usableW = W - margin*2;
+  const usableH = H - margin*2 - 30; // leave room for footer
+  const aspect = usableW / Math.max(1,usableH);
+  // choose grid dims to roughly hit TARGET_SITES with stage aspect
+  let cols = Math.max(6, Math.round(Math.sqrt(TARGET_SITES*aspect)));
+  let rows = Math.max(5, Math.round(TARGET_SITES/cols));
+  const dx = usableW/(cols-1), dy = usableH/(rows-1);
+  const jit = Math.min(dx,dy)*0.28;
+  const grid = [];
+  for(let r=0;r<rows;r++){
+    grid[r]=[];
+    for(let cI=0;cI<cols;cI++){
+      const x = margin + cI*dx + (Math.random()*2-1)*jit;
+      const y = margin + r*dy + (Math.random()*2-1)*jit;
+      grid[r][cI] = sites.length;
+      sites.push({x,y,occ:false,neigh:[]});
+    }
+  }
+  // bonds: right, down, and one diagonal -> a triangular-ish mesh
+  const addBond=(a,b)=>{
+    if(a===b) return;
+    const k = a<b ? a+','+b : b+','+a;
+    if(bondKey.has(k)) return;
+    bondKey.set(k, bonds.length);
+    bonds.push({a,b,g:0});
+    sites[a].neigh.push(b); sites[b].neigh.push(a);
+  };
+  for(let r=0;r<rows;r++){
+    for(let cI=0;cI<cols;cI++){
+      const a = grid[r][cI];
+      if(cI+1<cols) addBond(a, grid[r][cI+1]);
+      if(r+1<rows){
+        addBond(a, grid[r+1][cI]);
+        if(cI+1<cols && Math.random()<0.55) addBond(a, grid[r+1][cI+1]);
+        else if(cI>0 && Math.random()<0.55) addBond(a, grid[r+1][cI-1]);
+      }
+    }
+  }
+  // 128 probe sites spread across the field (deterministic stride)
+  const N = sites.length;
+  const want = Math.min(128, N);
+  const stride = N/want;
+  for(let i=0;i<want;i++) probeIdx.push(Math.floor(i*stride));
+  rebuildIons();
+}
+
+function rebuildIons(){
+  if(!sites.length){ ions=[]; return; }
+  const N = sites.length;
+  const target = Math.round(N * (P.cov/100));
+  // reset occupancy
+  for(const s of sites) s.occ=false;
+  ions = [];
+  const cap = Math.min(target, N);
+  let placed = 0, guard = 0;
+  while(placed<cap && guard < N*4){
+    const idx = (Math.random()*N)|0;
+    guard++;
+    if(sites[idx].occ) continue;
+    sites[idx].occ = true;
+    const s = sites[idx];
+    ions.push({ site:idx, from:idx, to:idx, t:1, x:s.x, y:s.y, px:s.x, py:s.y });
+    placed++;
+  }
+}
+
+// ---- ion hopping (drift + diffusion biased by FIELD) ----
+let hopCount = 0;          // hops since last readout window
+let hopsPerSec = 0;
+function pickTarget(ion){
+  const s = sites[ion.site];
+  const ns = s.neigh;
+  if(!ns.length) return ion.site;
+  // bias: prefer rightward + slightly down (the "field" direction)
+  const biasStrength = (fieldOn ? 0.6 : 0.12) * (P.bias/100);
+  let best=-1, bestW=-1, sumW=0;
+  const weights=[];
+  for(let i=0;i<ns.length;i++){
+    const n = ns[i];
+    if(sites[n].occ){ weights.push(0); continue; }
+    const ddx = sites[n].x - s.x;
+    const ddy = sites[n].y - s.y;
+    const len = Math.hypot(ddx,ddy)||1;
+    // dot with field direction (1,0.18)
+    const dir = (ddx/len)*1 + (ddy/len)*0.18;
+    let w = 1 + biasStrength*8*Math.max(0,dir);
+    // memristive preference: ions favor well-conducted bonds (paths remember)
+    const bk = ion.site<n ? ion.site+','+n : n+','+ion.site;
+    const bi = bondKey.get(bk);
+    if(bi!=null) w *= 1 + 1.4*bonds[bi].g;
+    w += Math.random()*0.4; // diffusive jitter
+    weights.push(w); sumW+=w;
+  }
+  if(sumW<=0) return ion.site; // boxed in
+  let pick = Math.random()*sumW;
+  for(let i=0;i<ns.length;i++){ pick-=weights[i]; if(pick<=0) return ns[i]; }
+  return ion.site;
+}
+
+function stepIons(dt){
+  // hop probability scales with hop rate
+  const rate = (0.4 + 3.4*(P.hop/100)) * dt; // hops attempted ~ per second
+  const coupGain = 0.10 + 0.55*(P.coup/100); // memristive strengthening per traversal
+  for(const ion of ions){
+    if(ion.t < 1){
+      // advancing along current hop
+      ion.t = Math.min(1, ion.t + dt * (3 + 5*(P.hop/100)));
+      const a = sites[ion.from], b = sites[ion.to];
+      const e = ion.t<0.5 ? 2*ion.t*ion.t : 1-Math.pow(-2*ion.t+2,2)/2; // ease
+      ion.px = ion.x; ion.py = ion.y;
+      ion.x = a.x + (b.x-a.x)*e;
+      ion.y = a.y + (b.y-a.y)*e;
+      if(ion.t>=1){ ion.site = ion.to; }
+      continue;
+    }
+    // idle at a site: maybe start a new hop
+    if(Math.random() < rate){
+      const tgt = pickTarget(ion);
+      if(tgt!==ion.site && !sites[tgt].occ){
+        sites[ion.site].occ = false;
+        sites[tgt].occ = true;
+        // strengthen the traversed bond (memristance grows with use)
+        const bk = ion.site<tgt ? ion.site+','+tgt : tgt+','+ion.site;
+        const bi = bondKey.get(bk);
+        if(bi!=null) bonds[bi].g = Math.min(1, bonds[bi].g + coupGain);
+        ion.from = ion.site; ion.to = tgt; ion.t = 0;
+        ion.px = ion.x; ion.py = ion.y;
+        hopCount++;
+      }
+    }
+  }
+  // conductance decay (the network slowly forgets)
+  const decay = Math.pow(0.985, dt*60); // ~per-frame at 60fps
+  for(const bd of bonds){ if(bd.g>0) bd.g *= decay; }
+}
+
+// ---- 128-bit kernel from probe sites ----
+function composeKernel(){
+  let word = 0n;
+  const nb = probeIdx.length;
+  for(let i=0;i<nb;i++){
+    const si = probeIdx[i];
+    const s = sites[si];
+    // bit = occupied OR sufficiently-conductive local bond
+    let bit = s.occ ? 1 : 0;
+    if(!bit){
+      // check strongest adjacent bond conductance
+      let gmax=0;
+      for(const n of s.neigh){
+        const bk = si<n ? si+','+n : n+','+si;
+        const bi = bondKey.get(bk);
+        if(bi!=null && bonds[bi].g>gmax) gmax = bonds[bi].g;
+      }
+      if(gmax > 0.55) bit = 1;
+    }
+    if(bit) word |= (1n << BigInt(127 - i));
+  }
+  return word;
+}
+
+// ---- rendering ----
+let lastT = performance.now();
+let readoutAccum = 0;     // throttle sidebar text ~10/s
+let hopWindow = 0, hopWindowCount = 0;
+
+function draw(now){
+  let dt = (now - lastT)/1000;
+  lastT = now;
+  if(dt>0.05) dt = 0.05; // clamp big gaps
+  if(W<=0||H<=0){ requestAnimationFrame(draw); return; }
+
+  stepIons(dt);
+
+  // hops/sec rolling
+  hopWindow += dt; hopWindowCount += hopCount; hopCount = 0;
+  if(hopWindow>=0.5){ hopsPerSec = Math.round(hopWindowCount/hopWindow); hopWindow=0; hopWindowCount=0; }
+
+  // ---- background ----
+  ctx.clearRect(0,0,W,H);
+  const t = now*0.001;
+
+  // water ripple rings from center
+  const cx=W*0.5, cy=H*0.46;
+  ctx.save();
+  for(let i=0;i<5;i++){
+    const phase = (t*0.18 + i/5) % 1;
+    const rad = phase * Math.max(W,H)*0.75;
+    ctx.globalAlpha = (1-phase)*0.10;
+    ctx.strokeStyle = '#38d6e6';
+    ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.arc(cx,cy,rad,0,Math.PI*2); ctx.stroke();
+  }
+  ctx.restore();
+
+  // ---- bonds (memristive conductance) ----
+  ctx.save();
+  ctx.lineCap='round';
+  for(const bd of bonds){
+    const a=sites[bd.a], b=sites[bd.b];
+    const g = bd.g;
+    // baseline faint cyan; used paths glow brighter/thicker and persist
+    const base = 0.06;
+    const alpha = base + g*0.7;
+    if(g>0.18){
+      ctx.strokeStyle = `rgba(120,235,210,${alpha})`;
+      ctx.shadowColor = '#2fd6a6';
+      ctx.shadowBlur = 6*g;
+    } else {
+      ctx.strokeStyle = `rgba(56,214,230,${alpha})`;
+      ctx.shadowBlur = 0;
+    }
+    ctx.lineWidth = 0.5 + g*2.6;
+    ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+  }
+  ctx.shadowBlur=0;
+  ctx.restore();
+
+  // ---- sites (dots) ----
+  ctx.save();
+  for(const s of sites){
+    ctx.globalAlpha = 0.55;
+    ctx.fillStyle = '#c8d2dc';
+    ctx.beginPath(); ctx.arc(s.x,s.y,1.1,0,Math.PI*2); ctx.fill();
+  }
+  ctx.globalAlpha=1;
+  ctx.restore();
+
+  // ---- ions (warm amber, glowing) ----
+  ctx.save();
+  for(const ion of ions){
+    // trail
+    ctx.strokeStyle = 'rgba(255,178,74,0.22)';
+    ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.moveTo(ion.px,ion.py); ctx.lineTo(ion.x,ion.y); ctx.stroke();
+    // glow
+    ctx.shadowColor = '#ffb24a';
+    ctx.shadowBlur = 12;
+    ctx.fillStyle = '#ffd9a0';
+    ctx.beginPath(); ctx.arc(ion.x,ion.y,2.6,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#ffb24a';
+    ctx.beginPath(); ctx.arc(ion.x,ion.y,1.5,0,Math.PI*2); ctx.fill();
+  }
+  ctx.shadowBlur=0;
+  ctx.restore();
+
+  // soft vignette
+  const vg = ctx.createRadialGradient(cx,cy,Math.min(W,H)*0.2, cx,cy, Math.max(W,H)*0.72);
+  vg.addColorStop(0,'rgba(0,0,0,0)');
+  vg.addColorStop(1,'rgba(2,5,10,0.7)');
+  ctx.fillStyle = vg; ctx.fillRect(0,0,W,H);
+
+  // ---- kernel + readouts (throttled text) ----
+  const kernel = composeKernel();
+  const hex = kernel.toString(16).padStart(32,'0').toUpperCase();
+
+  readoutAccum += dt;
+  if(readoutAccum >= 0.1){
+    readoutAccum = 0;
+    const occ = ions.length;
+    const covPct = sites.length ? (occ/sites.length*100) : 0;
+    // XOR parity across the 4 dwords of the kernel
+    const mask = (1n<<32n)-1n;
+    let xor = 0n;
+    for(let i=0;i<4;i++) xor ^= (kernel >> BigInt(i*32)) & mask;
+    const xorHex = xor.toString(16).padStart(8,'0').toUpperCase();
+    els.covOut.textContent = covPct.toFixed(2)+'%';
+    els.hopsOut.textContent = hopsPerSec.toLocaleString();
+    els.kernelHex.textContent = hex;
+    els.xorOut.textContent = xorHex;
+  }
+
+  // on-canvas live kernel strip (bottom center)
+  ctx.save();
+  ctx.font = '12px ui-monospace,Consolas,monospace';
+  ctx.textAlign='center'; ctx.textBaseline='alphabetic';
+  ctx.fillStyle = 'rgba(56,214,230,0.9)';
+  ctx.shadowColor='#38d6e6'; ctx.shadowBlur=8;
+  ctx.fillText('KERNEL[127:0] = 0x'+hex, cx, H-46);
+  ctx.restore();
+
+  requestAnimationFrame(draw);
+}
+
+resize();
+requestAnimationFrame(draw);
+</script>
+</body>
+</html>
